@@ -26,12 +26,16 @@
       },
 
       onPageLoad: function(aEvent) {
-       // alert('got to a here');
+        var show_alerts = false;
 
         var doc = aEvent.originalTarget; // doc is document that triggered "onload" event
+        if(doc.defaultView.frameElement)
+            return;
+
+        if(show_alerts)
+            alert('setting up logic.. with nodename of ' + doc.nodeName);
+
         var original_article;
-
-
 
         var article_column = doc.getElementById('abColumn');
         if( article_column )
@@ -43,10 +47,7 @@
             original_article = article_column.innerHTML;
         }
 
-
-        var show_alerts = true;
         var replaced = false;
-        var overlay_removed = false;
         setInterval( function(){
                        //take care of restoring original full text of article
                        if( original_article)
@@ -60,7 +61,8 @@
                               if(show_alerts)
                                 alert('doing article replacal');
                             }
-                            abColumn.innerHTML = original_article;
+                            if( abColumn.innerHTML.length != original_article.length )
+                                abColumn.innerHTML = original_article;
                           }
                         }
 
@@ -71,14 +73,13 @@
                          if(show_alerts)
                             alert('wiping out overlay');
                          var overlay_parent = overlay.parentNode;
-                         overlay_parent.parentNode.removeChild(overlay_parent);
-                         doc.body.style.overflow = '';
-                         doc.getElementsByTagName('html')[0].style.overflow = '';
-                        // overlay_removed = true;
+                         if(overlay_parent)
+                            overlay_parent.parentNode.removeChild(overlay_parent);
+                         if(doc.body.style.overflow != '')
+                            doc.body.style.overflow = '';
+                         if(doc.getElementsByTagName('html')[0].style.overflow != '')
+                            doc.getElementsByTagName('html')[0].style.overflow = '';
                        }
-
-
-
                      }, 300);
 
         // add event listener for page unload
