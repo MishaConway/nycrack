@@ -81,13 +81,6 @@
                             doc.getElementsByTagName('html')[0].style.overflow = '';
                        }
                      }, 300);
-
-        // add event listener for page unload
-        aEvent.originalTarget.defaultView.addEventListener("unload", function(event){ myExtension.onPageUnload(event); }, true);
-      },
-
-      onPageUnload: function(aEvent) {
-        // do something
       }
     }
   </script>
