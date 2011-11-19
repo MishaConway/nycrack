@@ -1,8 +1,0 @@
-#helloworldButton {  
-  list-style-image:  
-  url(chrome://newyorktimesreader/skin/icon.png);
-}  
-  
-toolbar[iconsize="small"] #helloworldButton {  
-  list-style-image: url(chrome://newyorktimesreader/skin/icon-small.png);
-} 
