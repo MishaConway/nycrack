@@ -1,0 +1,130 @@
+<?xml version="1.0"?>  
+<overlay id="helloworldOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
+  <commandset id="mainCommandSet">  
+    <command id="helloworldCommand" oncommand="window.openDialog(  
+      'chrome://newyorktimesreader/content/clock.xul',
+      'Clock','chrome,centerscreen,modal');" />  
+  </commandset>  
+  <toolbarpalette id="BrowserToolbarPalette">  
+     <toolbarbutton id="helloworldButton" label="NewYorkTimesReader" class="toolbarbutton-1" command="helloworldCommand" />
+  </toolbarpalette>  
+  <menupopup id="menu_ToolsPopup">  
+    <menuitem id="helloworldMenuitem" label="NewYorkTimesReader" insertbefore="sanitizeSeparator"
+       command="helloworldCommand" />  
+  </menupopup>
+
+  <script type="text/javascript">
+    function createSpan(doc, content)
+    {
+        var spanTag = doc.createElement("span");
+        spanTag.id = "span1";
+        spanTag.className ="dynamicSpan";
+       // alert('right befor it ise ' + content);
+        spanTag.innerHTML = content;
+       // alert( 'right after');
+        doc.body.appendChild(spanTag);
+    }
+
+
+    var original_article;
+
+    window.addEventListener("load", function() { myExtension.init(); }, false);
+
+    var myExtension = {
+      init: function() {
+        var appcontent = document.getElementById("appcontent");   // browser
+        if(appcontent)
+          appcontent.addEventListener("DOMContentLoaded", myExtension.onPageLoad, true);
+        var messagepane = document.getElementById("messagepane"); // mail
+        if(messagepane)
+          messagepane.addEventListener("load", function(event) { myExtension.onPageLoad(event); }, true);
+      },
+
+      onPageLoad: function(aEvent) {
+        //alert('got to this');
+
+        var doc = aEvent.originalTarget; // doc is document that triggered "onload" event
+
+        var article_column = doc.getElementById('abColumn');
+        if( article_column )
+        {
+          alert('got to scripts adasdsa');
+          var scripts = doc.getElementsByTagName('script');
+            var length = scripts.length;
+
+            while (length--)
+    {
+                scripts[length].parentNode.removeChild(scripts[length]);
+         //   alert( 'removing script...');
+    }
+
+         alert("made it past script removal..");
+    //    alert( "artcle column is " + article_column );
+            original_article = article_column.innerHTML;
+           // createSpan(doc, article_column.textContent);
+
+            alert('so is omething broken..?');
+          setInterval( function(){
+             //  alert('inside set interval');
+               var abColumn = doc.getElementById('abColumn');
+
+                if( abColumn )
+                {
+                 // alert( "got ab colum");
+                  abColumn.innerHTML = original_article;
+
+                }
+               //alert('looking for overlay...');
+               var overlay = doc.getElementById('overlay');
+               if( overlay)
+               {
+                 alert('got overlay');
+                 var overlay_parent = overlay.parentNode;
+                 overlay_parent.parentNode.removeChild(overlay_parent);
+
+               }
+             }, 4000);
+             // doc.location.href = "http://www.google.com";
+        }
+
+        setInterval( function(){
+                     //  alert('inside set interval');
+                      // doc.getElementById('abColumn').innerHTML = original_article;
+                       //alert('looking for overlay...');
+                       var overlay = doc.getElementById('overlay');
+                       if( overlay)
+                       {
+                        // alert('got overlay');
+                         var overlay_parent = overlay.parentNode;
+                         overlay_parent.parentNode.removeChild(overlay_parent);
+                         doc.body.style.overflow = '';
+                         doc.getElementsByTagName('html')[0].style.overflow = '';
+
+                       }
+                     }, 300);
+
+
+
+        //else
+        //    alert( "article column not found..");
+
+
+        // do something with the loaded page.
+        // doc.location is a Location object (see below for a link).
+        // You can use it to make your code executed on certain pages only.
+        if(doc.location.href.search("forum") > -1)
+          alert("a forum page is loaded");
+
+        // add event listener for page unload
+        aEvent.originalTarget.defaultView.addEventListener("unload", function(event){ myExtension.onPageUnload(event); }, true);
+      },
+
+      onPageUnload: function(aEvent) {
+        // do something
+      }
+    }
+
+
+
+  </script>
+</overlay>  
