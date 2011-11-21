@@ -16,7 +16,7 @@
         var show_alerts = false;
 
         var doc = aEvent.originalTarget; // doc is document that triggered "onload" event
-        if(doc.defaultView.frameElement)
+        if(doc.defaultView.frameElement || !doc.location || -1 == doc.location.href.indexOf('nytimes') )
             return;
 
         if(show_alerts)
